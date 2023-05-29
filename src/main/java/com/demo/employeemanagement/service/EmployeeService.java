@@ -2,10 +2,10 @@ package com.demo.employeemanagement.service;
 
 import com.demo.employeemanagement.dto.EmployeeDTO;
 import com.demo.employeemanagement.entity.EmployeeEntity;
-import com.demo.employeemanagement.utility.ResponseData;
 import com.demo.employeemanagement.exception.ApplicationException;
 import com.demo.employeemanagement.exception.EmployeeNotFoundException;
 import com.demo.employeemanagement.repository.EmployeeRepository;
+import com.demo.employeemanagement.utility.ResponseData;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,18 +21,23 @@ import static com.demo.employeemanagement.utility.Constants.*;
 @Service
 @Transactional
 public class EmployeeService {
-    @Autowired
     private EmployeeRepository employeeRepository;
 
-    public String createEmployees(EmployeeDTO employeeDTO) throws ApplicationException {
+    @Autowired
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
+    public String createEmployee(EmployeeDTO employeeDTO) throws ApplicationException {
         Optional<EmployeeEntity> isEmployeeExist = employeeRepository.findByAadhaar(employeeDTO.getAadhaar());
         if (isEmployeeExist.isPresent()) {
             throw new ApplicationException(EMPLOYEE_ALREADY_EXIST);
         }
-        employeeDTO.setAge(calculateAge(employeeDTO.getDob()));
-        EmployeeEntity employee = employeeRepository.save(EmployeeDTO.toEntity(employeeDTO));
 
+        int calculatedAge = calculateAge(employeeDTO.getDob());
+        employeeDTO.setAge(calculatedAge);
+
+        EmployeeEntity employee = employeeRepository.save(EmployeeDTO.toEntity(employeeDTO));
         return EMPLOYEE_CREATED_WITH_ID + " " + employee.getId();
     }
 

@@ -20,8 +20,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/employees")
-    public ResponseEntity<String> createEmployees(@Valid @RequestBody EmployeeDTO employee) throws ApplicationException {
-        String message = employeeService.createEmployees(employee);
+    public ResponseEntity<String> createEmployee(@Valid @RequestBody EmployeeDTO employee) throws ApplicationException {
+        String message = employeeService.createEmployee(employee);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
