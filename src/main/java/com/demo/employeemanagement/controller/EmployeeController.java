@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 public class EmployeeController {
+    private EmployeeService employeeService;
 
     @Autowired
-    private EmployeeService employeeService;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @PostMapping("/employees")
     public ResponseEntity<String> createEmployee(@Valid @RequestBody EmployeeDTO employee) throws ApplicationException {
